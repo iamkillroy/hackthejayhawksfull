@@ -4,7 +4,7 @@ import pygame
 
 
 class MainWindow:
-    def __init__(self, type="game"):
+    def __init__(self, type="title"):
         pygame.init()
         info = pygame.display.Info()
         self.screen = pygame.display.set_mode(
