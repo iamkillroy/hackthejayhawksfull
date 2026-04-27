@@ -1,7 +1,7 @@
 import sys
 
 import pygame
-
+import .src
 
 class MainWindow:
     def __init__(self, type="game"):
@@ -13,7 +13,7 @@ class MainWindow:
         pygame.display.set_caption("Jayhawk Bash")
         self.running = True
         self.type = type
-        self.entites = {}  # set for memory safety
+        self.entities = set()  # set for memory safety
 
     def update(self):
         # first handle game loop
@@ -22,6 +22,8 @@ class MainWindow:
                 self.running = False
                 sys.exit(0)
         # okay now draw the display
-        for entity in self.entites:
+        if self.type == "game":  # main game loop
+            self.entities.add(src.ent)
+        for entity in self.entities:
             entity.update()
         pygame.display.flip()
