@@ -6,7 +6,7 @@ class SelectBar(Entity):
         self.entityName = "selectbar"
         # select bar will always be in the same place
         # we throw away the x and y init
-        x, y = 100, 200
+        x, y = 600, 975
         super().__init__(x, y, screen)
 
     def update(self, optionalArgumentList=list()):

@@ -5,8 +5,8 @@ import pygame
 
 class Entity:
     def __init__(self, x, y, screen) -> None:
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
         self.sprite = 0
         self.spriteState = 0
         self.visible = True

@@ -12,6 +12,6 @@ class GameMap(Entity):
         self.sprites = list()
         # and now add a scaled down version
         scaledBackground = pygame.transform.scale_by(
-            pygame.image.load(self.get_sprite_addr(0)), 0.65
+            pygame.image.load(self.get_sprite_addr(0)), 0.67
         )
         self.sprites.append(scaledBackground)
