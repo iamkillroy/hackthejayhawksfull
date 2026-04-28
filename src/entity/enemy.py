@@ -1,16 +1,18 @@
 
 from pygame import Clock
 from .entity import Entity 
+from .entsignal import *
 class Enemy(Entity):
 	def __init__(self, x, y, screen, health):
 		self.entityName = "enemy"
 		super().__init__(x, y, screen)
 		self.health = health
 		self.cooldown = 2
-		self.coordNodes = [{"x": 300, "y": 300}]
+		self.coordNodes = [{"x": 1600, "y": 825}, {"x": 1600, "y": 500}, {"x": 100, "y": 500}, {"x": 100, "y": 75}, {"x": 2000, "y": 75}]
 		self.currentCoordNodes = 0
-		self.x = 300
-		self.y = 300
+		self.x = -50
+		self.y = 825
+		self.speed = 5
 	def update(self):
 		#this is our moving algo:
 		# you can think of pretty much the shortest relative path as the distance between
@@ -25,15 +27,16 @@ class Enemy(Entity):
 		# and we're able to basically move the position from
 		#dt = clock.tick(30) / 1000 #get deltatime TODO
 		#check for x, y 
-		print(self.x)
-		print(self.y)
-		print("fact")
-		if round(self.x) > round(self.coordNodes[0]["x"]) or round(self.x) < round(self.coordNodes[0]["x"]):
-			ammountX = -1 if self.x-self.coordNodes[0]["x"] > 0 else 1
+		print(self.currentCoordNodes)
+		if round(self.x) > round(self.coordNodes[self.currentCoordNodes]["x"]) or round(self.x) < round(self.coordNodes[self.currentCoordNodes]["x"]):
+			ammountX = -1 * self.speed if self.x-self.coordNodes[self.currentCoordNodes]["x"] > 0 else self.speed
 			self.x = ammountX + self.x
-		if round(self.y) > round(self.coordNodes[0]["y"]) or round(self.y) < round(self.coordNodes[0]["y"]):
-			ammountY = -1 if self.y-self.coordNodes[0]["y"] > 0 else 1
+		elif round(self.y) > round(self.coordNodes[self.currentCoordNodes]["y"]) or round(self.y) < round(self.coordNodes[self.currentCoordNodes]["y"]):
+			ammountY = -1 * self.speed if self.y-self.coordNodes[self.currentCoordNodes]["y"] > 0 else self.speed
 			self.y = ammountY + self.y
 		else: #if all is false, we're at the right point and += 1 
-			self.currentCoordNodes += 1 if self.currentCoordNodes < len(self.coordNodes) else 0
+			self.currentCoordNodes += 1 if self.currentCoordNodes < len(self.coordNodes)-1 else 0
+			if not (self.currentCoordNodes < len(self.coordNodes)-1):
+				#now we gotta return the signal to kill us
+				return signal.killme
 		super().update()

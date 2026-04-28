@@ -36,5 +36,5 @@ class Entity:
         """Draws the current sprite state at the current x and y of the entity"""
         self.screen.blit(self.sprites[self.spriteState], (self.x, self.y))
 
-    def update(self, optionalArgumentList=list()):
+    def update(self, optionalArgumentList=list()) -> str: #except a signal return
         self.display()
