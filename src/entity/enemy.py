@@ -1,7 +1,7 @@
 
 from pygame import Clock
-from .entity import Entity 
-from .entsignal import *
+from .entity import Entity
+from .entsignal import SIG
 class Enemy(Entity):
 	def __init__(self, x, y, screen, health):
 		self.entityName = "enemy"
@@ -26,7 +26,7 @@ class Enemy(Entity):
 		# so now we pretty miuch have the position of x,y
 		# and we're able to basically move the position from
 		#dt = clock.tick(30) / 1000 #get deltatime TODO
-		#check for x, y 
+		#check for x, y
 		print(self.currentCoordNodes)
 		if round(self.x) > round(self.coordNodes[self.currentCoordNodes]["x"]) or round(self.x) < round(self.coordNodes[self.currentCoordNodes]["x"]):
 			ammountX = -1 * self.speed if self.x-self.coordNodes[self.currentCoordNodes]["x"] > 0 else self.speed
@@ -34,9 +34,9 @@ class Enemy(Entity):
 		elif round(self.y) > round(self.coordNodes[self.currentCoordNodes]["y"]) or round(self.y) < round(self.coordNodes[self.currentCoordNodes]["y"]):
 			ammountY = -1 * self.speed if self.y-self.coordNodes[self.currentCoordNodes]["y"] > 0 else self.speed
 			self.y = ammountY + self.y
-		else: #if all is false, we're at the right point and += 1 
-			self.currentCoordNodes += 1 if self.currentCoordNodes < len(self.coordNodes)-1 else 0
-			if not (self.currentCoordNodes < len(self.coordNodes)-1):
+		else: #if all is false, we're at the right point and += 1
+			self.currentCoordNodes += 1
+			if not (self.currentCoordNodes < len(self.coordNodes)): #this'll hit when we exceed the path (AKA we're done)
 				#now we gotta return the signal to kill us
-				return signal.killme
+				return SIG.killme,SIG.finishedCourse
 		super().update()
