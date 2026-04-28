@@ -4,7 +4,7 @@ import pygame
 
 import src.entity.gamemap as gamemap
 import src.entity.selectbar as selectbar
-
+import src.entity.enemy as enemy
 RESOLUTION = (1920, 1080)
 
 
@@ -32,7 +32,7 @@ class MainWindow:
             self.entities[4].append(
                 selectbar.SelectBar(0, 0, self.screen)
             )  # highest level
-
+            self.entities[3].append(enemy.Enemy(0,0,self.screen, 10))
     def update(self):
         # first handle game loop
         self.screen.fill((0, 0, 0))  # clear each frame
