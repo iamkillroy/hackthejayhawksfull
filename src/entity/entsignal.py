@@ -13,3 +13,4 @@ class SIG:
 
     killme = "killme"
     finishedCourse = "fincur"
+    NEWREDFOX = "newredfox"
