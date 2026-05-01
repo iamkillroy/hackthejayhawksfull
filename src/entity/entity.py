@@ -30,9 +30,11 @@ class Entity:
         )
         return img_path
 
-    def display(self):
+    def display(self, x="self", y="self"):
         """Draws the current sprite state at the current x and y of the entity"""
-        self.screen.blit(self.sprites[self.spriteState], (self.x, self.y))
+        if x == "self": x = self.x
+        if y == "self": y = self.y
+        self.screen.blit(self.sprites[self.spriteState], (x, y))
 
     def update(self, dt, optionalArgumentList=list()) -> str: #except a signal return
         self.display()

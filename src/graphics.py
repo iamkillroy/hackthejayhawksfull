@@ -6,6 +6,7 @@ import src.entity.gamemap as gamemap
 import src.entity.selectbar as selectbar
 import src.entity.enemy as enemy
 import src.entity.wavemaker as wm
+import src.entity.hearts as coracao
 from src.entity.entsignal import SIG
 RESOLUTION = (1920, 1080)
 
@@ -43,6 +44,7 @@ class MainWindow:
                 selectbar.SelectBar(0, 0, self.screen)
             )  # highest level
             self.entities[self.LAYERS.BACKGROUND].append(wm.WaveMaker(0,0, self.screen))
+            self.entities[self.LAYERS.USERINTERFACE].append(coracao.Heart(100,100, self.screen))
     def update(self):
         self.dt = self.clock.tick(60) / 1000.0 #recalculate the deltatime every frame, 60fps is our max
         # first handle game loop
