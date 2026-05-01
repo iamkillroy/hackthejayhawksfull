@@ -5,6 +5,7 @@ import pygame
 import src.entity.gamemap as gamemap
 import src.entity.selectbar as selectbar
 import src.entity.enemy as enemy
+from src.entity.entsignal import SIG
 RESOLUTION = (1920, 1080)
 
 
@@ -33,7 +34,7 @@ class MainWindow:
             self.entities[4].append(
                 selectbar.SelectBar(0, 0, self.screen)
             )  # highest level
-            self.entities[3].append(enemy.Enemy(0,0,self.screen, 10))
+            self.entities[3].append(enemy.Enemy(700,700,self.screen, 10))
     def update(self):
         self.dt = self.clock.tick(60) / 1000.0 #recalculate the deltatime every frame, 60fps is our max
         # first handle game loop
@@ -48,15 +49,35 @@ class MainWindow:
         # by doing this method, we're making it so that entites that are higher up
         # (larger index) get drawn over and supercede the lower stuff (such as background)
         #
+        signalAccum = [] #store all signals accumulated
         for entityTier in self.entities:
             # i know i know it's O(n^2)
             # and in python but for small maps
             # it's gonna be alright
             for entity in entityTier:
-                entity.update(self.dt)
+                resp = entity.update(self.dt)
+                if resp is not None: #resp can be None, (SIG.xxxx), or a tuple of (SIG.xxxx, SIG.yyyy.....SIG.zzz)
+                        #handle multiple signals which is the new default
+                        subsignalArray = [[], entity]
+                        for subsignal in resp:
+                            subsignalArray[0].append(subsignal)
+                        signalAccum.append(subsignalArray)
         # cast that fat scaled version onto the screen
         info = pygame.display.Info()
         scaled = pygame.transform.scale(self.screen, (info.current_w, info.current_h))
+        #now we gotta handle signals which get executed the next frame after update
+        for signal, entityOfSignal in signalAccum:
+            for subsignal in signal:
+                match subsignal:
+                    case SIG.NOOP:
+                        pass
+                    case SIG.KILLME:
+                        for tier in self.entities:
+                            if entityOfSignal in tier:
+                                tier.remove(entityOfSignal)
+                                break #only one instance so we can cut the loop short
+                    case SIG.FINISHEDCOURSE:
+                        #TODO, deincrement hearts
 
         self.realScreen.blit(scaled, (0, 0))  # 00 for the top
         pygame.display.flip()

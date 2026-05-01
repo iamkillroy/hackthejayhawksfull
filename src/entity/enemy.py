@@ -1,41 +1,50 @@
-
 from pygame import Clock
 from .entity import Entity
 from .entsignal import SIG
+
 class Enemy(Entity):
 	def __init__(self, x, y, screen, health):
 		self.entityName = "enemy"
 		super().__init__(x, y, screen)
 		self.health = health
 		self.cooldown = 2
-		self.coordNodes = [{"x": 1600, "y": 825}, {"x": 1600, "y": 500}, {"x": 100, "y": 500}, {"x": 100, "y": 75}, {"x": 2000, "y": 75}]
+		self.coordNodes = [
+			{"x": 1600, "y": 825},
+			{"x": 1600, "y": 500},
+			{"x": 100,  "y": 500},
+			{"x": 100,  "y": 75},
+			{"x": 2000, "y": 75},
+		]
 		self.currentCoordNodes = 0
 		self.x = float(-50)
 		self.y = float(825)
-		self.speed = 100
+		self.speed = 2000
+
 	def update(self, dt):
-		#this is our moving algo:
-		# you can think of pretty much the shortest relative path as the distance between
-		# x1,y1 (our xy) and x2,y2 (their xy)
-		#
-		#	 Y (2,2)
-		#	/
-		#  /
-		# E
-		# (1,1)
-		# so now we pretty miuch have the position of x,y
-		# and we're able to basically move the position from
-		#dt = clock.tick(30) / 1000 #get deltatime TODO
-		#check for x, y
-		if round(self.x) > round(self.coordNodes[self.currentCoordNodes]["x"]) or round(self.x) < round(self.coordNodes[self.currentCoordNodes]["x"]):
-			ammountX = -1 * self.speed if self.x-self.coordNodes[self.currentCoordNodes]["x"] > 0 else self.speed
-			self.x = ammountX * dt + self.x
-		elif round(self.y) > round(self.coordNodes[self.currentCoordNodes]["y"]) or round(self.y) < round(self.coordNodes[self.currentCoordNodes]["y"]):
-			ammountY = -1 * self.speed if self.y-self.coordNodes[self.currentCoordNodes]["y"] > 0 else self.speed
-			self.y = ammountY * dt + self.y
-		else: #if all is false, we're at the right point and += 1
+		target = self.coordNodes[self.currentCoordNodes]
+		tx, ty = target["x"], target["y"]
+
+		dx = tx - self.x
+		dy = ty - self.y
+
+		# How far we can travel this frame
+		step = self.speed * dt
+
+		if abs(dx) > 0.5:
+			# Move along X first
+			move = min(step, abs(dx))   # never overshoot
+			self.x += move if dx > 0 else -move
+		elif abs(dy) > 0.5:
+			# Then move along Y
+			move = min(step, abs(dy))   # never overshoot
+			self.y += move if dy > 0 else -move
+		else:
+			# Close enough — snap exactly to node and advance
+			self.x = float(tx)
+			self.y = float(ty)
 			self.currentCoordNodes += 1
-			if not (self.currentCoordNodes < len(self.coordNodes)): #this'll hit when we exceed the path (AKA we're done)
-				#now we gotta return the signal to kill us
-				return SIG.killme,SIG.finishedCourse
+
+			if self.currentCoordNodes >= len(self.coordNodes):
+				return SIG.KILLME, SIG.FINISHEDCOURSE
+
 		super().update(dt)

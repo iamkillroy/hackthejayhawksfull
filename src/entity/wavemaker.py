@@ -24,6 +24,6 @@ class WaveMaker(Entity):
             # we're gonna use that fancy smanczy signal system to transmit to make those
             # thanks godot! that concept is cool. sorry i don't love your engine so much to actually do it
             # in it
-            redAmount = pow(e, self.currentWaveCounter) if self.currentWaveCounter < 20 else 15 + random.randint(-5, 5)
-
-            return SIG.NEWREDFOX * redAmount
+            redAmount = round(pow(e, self.currentWaveCounter)) if self.currentWaveCounter < 20 else 15 + random.randint(-5, 5)
+            #return the signal amount for redfox
+            return [SIG.NEWREDFOX for _ in range(redAmount)]

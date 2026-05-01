@@ -9,8 +9,8 @@ class SIG:
     # and using wildcard means importing all local vars without the signal.a
     # so i'm finna do it this way and regret it
     #
-    noOperation = ""
+    NOOP = ""
 
-    killme = "killme"
-    finishedCourse = "fincur"
+    KILLME = "killme"
+    FINISHEDCOURSE = "fincur"
     NEWREDFOX = "newredfox"
