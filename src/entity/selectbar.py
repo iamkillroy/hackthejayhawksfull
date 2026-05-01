@@ -9,6 +9,6 @@ class SelectBar(Entity):
         x, y = 600, 975
         super().__init__(x, y, screen)
 
-    def update(self, optionalArgumentList=list()):
+    def update(self,dt, optionalArgumentList=list()):
 
-        super().update()
+        super().update(dt)

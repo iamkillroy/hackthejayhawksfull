@@ -28,13 +28,11 @@ class Entity:
         img_path = Path(__file__).parents[2] / (
             "assets/sprites/" + self.entityName + str(spriteState) + ".png"
         )
-        print(img_path.exists())
-        print(img_path)
         return img_path
 
     def display(self):
         """Draws the current sprite state at the current x and y of the entity"""
         self.screen.blit(self.sprites[self.spriteState], (self.x, self.y))
 
-    def update(self, optionalArgumentList=list()) -> str: #except a signal return
+    def update(self, dt, optionalArgumentList=list()) -> str: #except a signal return
         self.display()

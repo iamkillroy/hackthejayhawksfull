@@ -16,12 +16,13 @@ class MainWindow:
             (info.current_w, info.current_h), pygame.FULLSCREEN
         )
         self.screen = pygame.Surface(RESOLUTION)
+        self.clock = pygame.time.Clock()
+        self.dt = 0 #this is my deltatime in seconds
 
         pygame.display.set_caption("Jayhawk Bash")
         self.running = True
         self.type = type
         self.entities = [[] for _ in range(5)]  # create five lists within a list
-        print(self.entities)
         # the reason we're doing this is tier. each list will get drawn over the other
         # and has superceding abilities
         # (0) - background
@@ -34,6 +35,7 @@ class MainWindow:
             )  # highest level
             self.entities[3].append(enemy.Enemy(0,0,self.screen, 10))
     def update(self):
+        self.dt = self.clock.tick(60) / 1000.0 #recalculate the deltatime every frame, 60fps is our max
         # first handle game loop
         self.screen.fill((0, 0, 0))  # clear each frame
 
@@ -51,7 +53,7 @@ class MainWindow:
             # and in python but for small maps
             # it's gonna be alright
             for entity in entityTier:
-                entity.update()
+                entity.update(self.dt)
         # cast that fat scaled version onto the screen
         info = pygame.display.Info()
         scaled = pygame.transform.scale(self.screen, (info.current_w, info.current_h))
