@@ -5,11 +5,19 @@ import pygame
 import src.entity.gamemap as gamemap
 import src.entity.selectbar as selectbar
 import src.entity.enemy as enemy
+import src.entity.wavemaker as wm
 from src.entity.entsignal import SIG
 RESOLUTION = (1920, 1080)
 
 
 class MainWindow:
+
+    class LAYERS:
+        BACKGROUND = 0
+        USERINTERFACE = 4
+        SPRITELAYER1 = 1
+        SPRITELAYER2 = 2
+        SPRITELAYER3 = 3
     def __init__(self, type="game"):
         pygame.init()
         info = pygame.display.Info()
@@ -30,11 +38,11 @@ class MainWindow:
         # (1-3) - entities of varying superiority
         # (4) - the UI
         if self.type == "game":  # main game add entity
-            self.entities[0].append(gamemap.GameMap(0, 0, self.screen))
-            self.entities[4].append(
+            self.entities[self.LAYERS.BACKGROUND].append(gamemap.GameMap(0, 0, self.screen))
+            self.entities[self.LAYERS.USERINTERFACE].append(
                 selectbar.SelectBar(0, 0, self.screen)
             )  # highest level
-            self.entities[3].append(enemy.Enemy(700,700,self.screen, 10))
+            self.entities[self.LAYERS.BACKGROUND].append(wm.WaveMaker(0,0, self.screen))
     def update(self):
         self.dt = self.clock.tick(60) / 1000.0 #recalculate the deltatime every frame, 60fps is our max
         # first handle game loop
@@ -66,6 +74,9 @@ class MainWindow:
         info = pygame.display.Info()
         scaled = pygame.transform.scale(self.screen, (info.current_w, info.current_h))
         #now we gotta handle signals which get executed the next frame after update
+
+        #PER FRAME VARIABLES
+        enemySpacing = 0
         for signal, entityOfSignal in signalAccum:
             for subsignal in signal:
                 match subsignal:
@@ -78,6 +89,14 @@ class MainWindow:
                                 break #only one instance so we can cut the loop short
                     case SIG.FINISHEDCOURSE:
                         #TODO, deincrement hearts
-
+                        pass
+                    case SIG.NEWREDFOX:
+                        print("gotnew sig")
+                        #this means to add a new redfox. for each time this is called in frame,
+                        # the signal handler will offset the x by -20 to make sure that there's
+                        # consistent spacing on them
+                        enemySpacing -= 20
+                        newEnemy = enemy.Enemy(0 + enemySpacing, 825, self.screen, 10)
+                        self.entities[MainWindow.LAYERS.SPRITELAYER1].append(newEnemy)
         self.realScreen.blit(scaled, (0, 0))  # 00 for the top
         pygame.display.flip()

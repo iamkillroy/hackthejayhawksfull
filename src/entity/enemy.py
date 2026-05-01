@@ -16,9 +16,9 @@ class Enemy(Entity):
 			{"x": 2000, "y": 75},
 		]
 		self.currentCoordNodes = 0
-		self.x = float(-50)
-		self.y = float(825)
-		self.speed = 2000
+		self.x = float(x)
+		self.y = float(y)
+		self.speed = 100
 
 	def update(self, dt):
 		target = self.coordNodes[self.currentCoordNodes]
